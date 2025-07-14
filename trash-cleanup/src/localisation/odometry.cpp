@@ -50,7 +50,7 @@ void Odometry::update()
 
     float currentLeftEncoder = leftMotor.position(degrees);
     float currentRightEncoder = rightMotor.position(degrees);
-
+   
     float deltaLeftEncoder = currentLeftEncoder - prevLeftEncoder;
     float deltaRightEncoder = currentRightEncoder - prevRightEncoder;
 
@@ -62,12 +62,28 @@ void Odometry::update()
     robotHeading = imuSensor.heading(degrees);
 
     float headingRadians = -robotHeading * M_PI / 180.0;
-
     robotX += deltaDistance * cos(headingRadians);
     robotY += deltaDistance * sin(headingRadians);
 
     prevLeftEncoder = currentLeftEncoder;
     prevRightEncoder = currentRightEncoder;
+    printf("[ODOM] Left: %.2lf, Right: %.2lf\n", 
+       (double)leftMotor.position(degrees), 
+       (double)rightMotor.position(degrees));
+
+printf("[ODOM] ΔL: %.2lf ΔR: %.2lf → ΔDist: %.2lf\n", 
+       (double)deltaLeftEncoder, 
+       (double)deltaRightEncoder, 
+       (double)deltaDistance);
+
+printf("[ODOM] Heading: %.2lf°, radians: %.2lf, cos(θ): %.2lf\n", 
+       (double)robotHeading, 
+       (double)headingRadians, 
+       (double)cos(headingRadians));
+
+printf("[ODOM] Updated X: %.2lf Y: %.2lf\n", 
+       (double)robotX, 
+       (double)robotY);
 }
 
 float Odometry::getX()
@@ -101,6 +117,7 @@ float Odometry::getAngleTo(float targetX, float targetY)
 
 void Odometry::displayOnScreen(vex::brain::lcd& screen)
 {
+    screen.clearScreen();
     screen.setCursor(1, 1);
     screen.print("X: %.1fmm", robotX);
 
