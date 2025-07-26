@@ -31,10 +31,10 @@ class fsm{
     void checkDist();
     bool checkDist(float currRad, float targetRad);
     bool isobstacle(vision& Vision, vision::signature& Vision__SIG_1);
-    void goTowards(motor& leftDrive,motor& rightDrive, vision& Vision);
+    void goTowards(motor& leftDrive,motor& rightDrive, vision& Vision, vision::signature& Vision__SIG_1);
     void goBack();
     void updateState(fsm::State event);
-    void updateEvents(fsm::Transition event);
+    void updateEvents(fsm::Transition transition, fsm::State state);
 
     private:
 
