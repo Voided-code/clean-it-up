@@ -20,18 +20,22 @@ void robot::updateTick(){
     odom->update();
 }
 
-motor robot::getleftDrive(){
+motor& robot::getleftDrive(){
     return leftDrive;
 }
 
-motor robot::getrightDrive(){
+motor& robot::getrightDrive(){
     return rightDrive;
 }
 
-brain robot::getBrain(){
+brain& robot::getBrain(){
     return Brain;
 }
 
-Odometry robot::getOdom(){
+Odometry& robot::getOdom(){
     return *odom;
+}
+
+vision::signature& robot::getVisionSignature() {
+    return Vision__SIG_1;
 }
