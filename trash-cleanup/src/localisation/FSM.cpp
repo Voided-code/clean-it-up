@@ -20,8 +20,8 @@ void fsm::randomMovement(motor& leftDrive,motor& rightDrive) {
     srand(time(NULL));
 
    
-    // Generate random speed between -100 and 100
-    int randomSpeed = (rand() % 201) - 100; 
+    // Generate random speed between -50 and 50
+    int randomSpeed = (rand() % 101) - 50; 
 
     // Generate random duration (e.g., 500ms to 2000ms)
     int randomDuration = 500 + (rand() % 1501); 
@@ -66,35 +66,48 @@ bool fsm::isobstacle(vision& Vision, vision::signature& Vision__SIG_1){
         return false;
 }
 
-void fsm::goTowards(motor& leftDrive,motor& rightDrive, vision& Vision){
+void fsm::goTowards(motor& leftDrive,motor& rightDrive, vision& Vision, vision::signature& Vision__SIG_1){
+    leftDrive.setStopping(hold);
+    rightDrive.setStopping(hold);
     leftDrive.setVelocity(40, percent);
     rightDrive.setVelocity(40, percent);
+    int hold = 0;
     
-    if(Vision.objects[1].centerX < 315/2){
-        while(Vision.objects[1].centerX < 315/2){
-            leftDrive.setVelocity(40 /* placeholder value */, percent);
-            rightDrive.setVelocity(40 /* placeholder value */, percent);
-            leftDrive.spin(vex::forward);
-            rightDrive.spin(vex::reverse);
-            wait(20, msec);
-        }
-        leftDrive.stop();
-        rightDrive.stop();
-    }
-//     } else{
-//         while(Vision.objects[1].centerX > 315/2){
-//             leftDrive.setVelocity((Vision.objects[1].centerX-157.5)/2, percent);
-//             rightDrive.setVelocity((Vision.objects[1].centerX-157.5)/2, percent);
-//             leftDrive.spin(vex::forward);
-//             rightDrive.spin(vex::reverse);
-//             wait(20, msec);
-//         }
-//         leftDrive.stop();
-//         rightDrive.stop();
-//     }
+    // if(Vision.objects[1].centerX < 315/2){
+    //     while(Vision.objects[1].centerX < 315/2){
+    //         leftDrive.setVelocity(40 /* placeholder value */, percent);
+    //         rightDrive.setVelocity(40 /* placeholder value */, percent);
+    //         leftDrive.spin(vex::forward);
+    //         rightDrive.spin(vex::reverse);
+    //         wait(20, msec);
+    //     }
+    //     leftDrive.stop();
+    //     rightDrive.stop();
+    // } else{
+    //     while(Vision.objects[1].centerX > 315/2){
+    //         leftDrive.setVelocity((Vision.objects[1].centerX-157.5)/2, percent);
+    //         rightDrive.setVelocity((Vision.objects[1].centerX-157.5)/2, percent);
+    //         leftDrive.spin(vex::forward);
+    //         rightDrive.spin(vex::reverse);
+    //         wait(20, msec);
+    //     }
+    //     leftDrive.stop();
+    //     rightDrive.stop();
+    // }
 
-//     leftDrive.spin(vex::forward);
-//     rightDrive.spin(vex::reverse);
+    leftDrive.spin(vex::forward);
+    rightDrive.spin(vex::forward);
+    //TODO: good job in the future maybe put in isobstacle
+    while(hold < 20){
+        Vision.takeSnapshot(Vision__SIG_1);
+        while (Vision.objectCount > 0) {
+            hold = 0;
+            Vision.takeSnapshot(Vision__SIG_1);
+            wait(50, msec);
+        }
+        hold++;
+        wait(50, msec);
+    }
 }
 
 void fsm::goBack(){
@@ -105,6 +118,7 @@ void fsm::updateState(fsm::State event){
     if(event == fsm::State::START){
 
     } else if(event == fsm::State::ROAM){
+        /** if see trash then updateEvent(transition::Foundtrash,currentstate) */
 
     } else if(event == fsm::State::CLEARING){
 
@@ -114,15 +128,26 @@ void fsm::updateState(fsm::State event){
 
     }
 }
+//todo: write update event
+void fsm::updateEvents(fsm::Transition transition, fsm::State state){
+    if(transition == fsm::Transition::FOUND){
+        if(state==fsm::ROAM){
+            updateState(fsm::CLEARING);
+        }    
 
-void fsm::updateEvents(fsm::Transition event){
-    if(event == fsm::Transition::FOUND){
+    } else if(transition == fsm::Transition::CLEARED){
+        if(state==fsm::CLEARING){
+            updateState(fsm::RETURNING);
+        }    
 
-    } else if(event == fsm::Transition::CLEARED){
+    } else if(transition == fsm::Transition::STARTREACHED){
+        if(state==fsm::RETURNING){
+            updateState(fsm::ROAM);
+        }    
 
-    } else if(event == fsm::Transition::STARTREACHED){
-
-    } else if(event == fsm::Transition::NOTRASH){
-
+    } else if(transition == fsm::Transition::NOTRASH){
+        if(state==fsm::ROAM){
+            updateState(fsm::STOP);
+        }   
     }
 }

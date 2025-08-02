@@ -1,11 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*    Module:       main.cpp                                                  */
-/*    Author:       alexa                                                     */
-/*    Created:      7/2/2025, 2:54:03 PM                                      */
-/*    Description:  IQ2 project                                               */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
 #include "vex.h"
 #include "localisation/odometry.h"
 #include "robot.h"
@@ -41,10 +33,21 @@ int main() {
         Brain.Screen.print("X: %.1f Y: %.1f", currPos.first, currPos.second);
         Brain.Screen.setCursor(2,1);   
         Brain.Screen.print("Rad: %.1f", radius);
-        tst->randomMovement(ror->getleftDrive(), ror->getrightDrive());
         if(tst->isobstacle(ror->Vision, ror->getVisionSignature())){
-            break;
+            // break;
+            tst->goTowards(ror->getleftDrive(), ror->getrightDrive(), ror->Vision, ror->getVisionSignature());
+            //run the go 
+            
+            
         }
+        bool test= tst->isobstacle(ror->Vision, ror->getVisionSignature());
+        if(test){
+            Brain.Screen.print("t");
+        } else {
+            Brain.Screen.print("f");
+        }
+
+        tst->randomMovement(ror->getleftDrive(), ror->getrightDrive());
         wait(200, msec);
     }
     delete ror;

@@ -13,7 +13,7 @@ class robot{
       brain Brain;
       motor leftDrive=motor(PORT1, true);
       motor rightDrive=motor(PORT7, false);
-      vision::signature Vision__SIG_1 = vision::signature (1, -14623, -14303, -14463,3427, 3785, 3606,5, 0);
+      vision::signature Vision__SIG_1 = vision::signature (1, -4131, -3023, -3577,6085, 8193, 7139,2, 0);
       inertial imu = inertial();
       Odometry* odom;
 
