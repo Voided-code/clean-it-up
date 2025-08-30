@@ -25,16 +25,21 @@ class fsm{
     };
 
     State a;
+    Transition trans;
 
     fsm();
-    void randomMovement(motor& leftDrive, motor& rightDrive);
+    void randomMovement(motor& leftDrive,motor& rightDrive);
+     inline float clampf(float v, float lo, float hi);
+     inline float normDeg(float a);
+     inline float angleDiff(float target, float current);
+
     void checkDist();
     bool checkDist(float currRad, float targetRad);
     bool isobstacle(vision& Vision, vision::signature& Vision__SIG_1);
     void goTowards(motor& leftDrive,motor& rightDrive, vision& Vision, vision::signature& Vision__SIG_1);
-    void goBack();
-    void updateState(fsm::State event);
-    void updateEvents(fsm::Transition transition, fsm::State state);
+    void goBack(motor& leftDrive,motor& rightDrive,robot& ror); //include the robot parameter (Robot& ror)
+    void updateState(fsm::State event, robot& ror, motor& leftDrive,motor& rightDrive);
+    void updateEvents(fsm::Transition transition, fsm::State state, robot& ror, motor& leftDrive,motor& rightDrive);
 
     private:
 

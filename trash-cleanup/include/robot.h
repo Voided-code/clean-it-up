@@ -31,5 +31,6 @@ class robot{
         motor& getrightDrive();
         brain& getBrain();
         Odometry& getOdom();
+        inertial& getIMU() {return imu;}
 };
 #endif
