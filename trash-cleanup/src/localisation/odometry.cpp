@@ -67,23 +67,6 @@ void Odometry::update()
 
     prevLeftEncoder = currentLeftEncoder;
     prevRightEncoder = currentRightEncoder;
-    printf("[ODOM] Left: %.2lf, Right: %.2lf\n", 
-       (double)leftMotor.position(degrees), 
-       (double)rightMotor.position(degrees));
-
-printf("[ODOM] ΔL: %.2lf ΔR: %.2lf → ΔDist: %.2lf\n", 
-       (double)deltaLeftEncoder, 
-       (double)deltaRightEncoder, 
-       (double)deltaDistance);
-
-printf("[ODOM] Heading: %.2lf°, radians: %.2lf, cos(θ): %.2lf\n", 
-       (double)robotHeading, 
-       (double)headingRadians, 
-       (double)cos(headingRadians));
-
-printf("[ODOM] Updated X: %.2lf Y: %.2lf\n", 
-       (double)robotX, 
-       (double)robotY);
 }
 
 float Odometry::getX()
